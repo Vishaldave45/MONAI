@@ -70,6 +70,45 @@ If you have used MONAI in your research, please cite us! The citation can be exp
 [The MONAI Model Zoo](https://github.com/Project-MONAI/model-zoo) is a place for researchers and data scientists to share the latest and great models from the community.
 Utilizing [the MONAI Bundle format](https://monai.readthedocs.io/en/latest/bundle_intro.html) makes it easy to [get started](https://github.com/Project-MONAI/tutorials/tree/main/model_zoo) building workflows with MONAI.
 
+
+## Local Development Setup
+
+To get started with local development for MONAI, follow these steps to set up your environment:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Project-MONAI/MONAI.git
+   cd MONAI
+   ```
+
+2. **Install dependencies:**
+   Install the development dependencies and MONAI in editable mode:
+   ```bash
+   pip install -r requirements-dev.txt
+   pip install -e .
+   ```
+
+3. **Run tests:**
+   Verify your setup by running the unit tests:
+   ```bash
+   ./runtests.sh --quick --unittests
+   ```
+
+For detailed contribution guidelines, please refer to [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Repository Structure
+
+An overview of the main components in the MONAI repository:
+
+- `monai/`: The core source code for MONAI.
+  - `apps/`: Application-specific workflows and components.
+  - `data/`: Data loading, datasets, and decoders.
+  - `engines/`: Workflow engines for training and evaluation.
+  - `networks/`: Network architectures (nets, blocks, layers).
+  - `transforms/`: Pre-processing and post-processing transforms.
+- `tests/`: Unit and integration tests.
+- `docs/`: Documentation source files.
+
 ## Contributing
 
 For guidance on making a contribution to MONAI, see the [contributing guidelines](https://github.com/Project-MONAI/MONAI/blob/dev/CONTRIBUTING.md).
