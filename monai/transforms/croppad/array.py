@@ -290,7 +290,7 @@ class BorderPad(Pad):
         else:
             raise ValueError(
                 f"Unsupported spatial_border length: {len(spatial_border)}, available options are "
-                f"[1, len(spatial_shape)={len(spatial_shape)}, 2*len(spatial_shape)={2*len(spatial_shape)}]."
+                f"[1, len(spatial_shape)={len(spatial_shape)}, 2*len(spatial_shape)={2 * len(spatial_shape)}]."
             )
         return tuple([(0, 0)] + data_pad_width)  # type: ignore
 
@@ -965,6 +965,7 @@ class RandWeightedCrop(Randomizable, TraceableTransform, LazyTransform, MultiSam
         weight_map: weight map used to generate patch samples. The weights must be non-negative.
             Each element denotes a sampling weight of the spatial location. 0 indicates no sampling.
             It should be a single-channel array in shape, for example, `(1, spatial_dim_0, spatial_dim_1, ...)`.
+            The weight map is only used to compute the patch sample locations; it is not cropped itself.
         lazy: a flag to indicate whether this transform should execute lazily or not. Defaults to False.
     """
 

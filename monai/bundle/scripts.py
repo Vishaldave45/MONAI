@@ -17,20 +17,19 @@ import os
 import re
 import urllib
 import warnings
-import zipfile
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from functools import partial
 from pathlib import Path
 from pydoc import locate
 from shutil import copyfile
 from textwrap import dedent
-from typing import Any, Callable
+from typing import Any
 
 import torch
 from torch.cuda import is_available
 
 from monai._version import get_versions
-from monai.apps.utils import _basename, download_url, extractall, get_logger
+from monai.apps.utils import _basename, _extract_zip, download_url, extractall, get_logger
 from monai.bundle.config_parser import ConfigParser
 from monai.bundle.utils import DEFAULT_INFERENCE, DEFAULT_METADATA, merge_kv
 from monai.bundle.workflows import BundleWorkflow, ConfigWorkflow
@@ -288,9 +287,8 @@ def _download_from_ngc_private(
     if remove_prefix:
         filename = _remove_ngc_prefix(filename, prefix=remove_prefix)
     extract_path = download_path / f"{filename}"
-    with zipfile.ZipFile(zip_path, "r") as z:
-        z.extractall(extract_path)
-        logger.info(f"Writing into directory: {extract_path}.")
+    _extract_zip(zip_path, extract_path)
+    logger.info(f"Writing into directory: {extract_path}.")
 
 
 def _get_ngc_token(api_key, retry=0):
@@ -1950,7 +1948,7 @@ def create_workflow(
 
     """
     _args = update_kwargs(args=args_file, workflow_name=workflow_name, config_file=config_file, **kwargs)
-    (workflow_name, config_file) = _pop_args(
+    workflow_name, config_file = _pop_args(
         _args, workflow_name=ConfigWorkflow, config_file=None
     )  # the default workflow name is "ConfigWorkflow"
     if isinstance(workflow_name, str):
@@ -2007,7 +2005,6 @@ def download_large_files(bundle_path: str | None = None, large_file_name: str | 
     parser.read_config(large_file_path)
     large_files_list = parser.get()["large_files"]
     for lf_data in large_files_list:
-        lf_data["fuzzy"] = True
         if "hash_val" in lf_data and lf_data.get("hash_val", "") == "":
             lf_data.pop("hash_val")
         if "hash_type" in lf_data and lf_data.get("hash_type", "") == "":
